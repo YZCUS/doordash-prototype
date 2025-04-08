@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".", // Base directory for resolving paths
+      "paths": {
+        "@/*": ["./src/*"] // Map '@/*' to './src/*'
+      }
+    },
+    "include": ["src/**/*"], // Specify which files are part of your project
+    "exclude": ["node_modules"] // Exclude node_modules
+  }
