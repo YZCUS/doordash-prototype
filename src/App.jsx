@@ -156,7 +156,7 @@ function TopBar({ mode, toggleMode, balance, selectedAddress, setSelectedAddress
   return (
     <div className="flex justify-between items-center gap-2 flex-wrap"> {/* Added flex-wrap for smaller screens */}
       {/* Address Selector */}
-      <div className="relative w-40 sm:w-48"> {/* Adjusted width */}
+      <div className="relative w-40 sm:w-30"> {/* Adjusted width */}
         <select
           className="w-full appearance-none rounded-full border border-gray-300 bg-white pl-10 pr-8 py-2 shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
           value={selectedAddress}
@@ -819,7 +819,7 @@ function SettingsPage({ navigateTo }) {
         <CardContent className="p-4 space-y-3">
           <h3 className="text-base font-semibold flex items-center gap-2"><MapPin className="w-5 h-5 text-red-600" /> Addresses</h3>
           {/* List existing addresses - simplified */}
-          <div className="text-sm text-gray-700 p-2 border rounded-md bg-gray-50">Home Address - 123 Main St...</div>
+          <div className="text-sm text-gray-700 p-2 border rounded-md bg-gray-50">Home - 123 Main St...</div>
           <div className="text-sm text-gray-700 p-2 border rounded-md bg-gray-50">Work - 456 Office Ave...</div>
           <Button variant="outline" size="sm" className="w-full">Manage Addresses</Button>
         </CardContent>
@@ -984,8 +984,8 @@ export default function DoorDashPrototype() {
   const [currentOrderDetails, setCurrentOrderDetails] = useState(null); // To hold data for summary OR receipt page
   const [mode, setMode] = useState("delivery"); // 'delivery' or 'pickup'
   const [balance] = useState(24.50); // User balance
-  const [selectedAddress, setSelectedAddress] = useState("Home Address"); // Currently selected address
-  const addresses = ["Home Address", "Work", "123 Main St", "Office"]; // Available addresses
+  const [selectedAddress, setSelectedAddress] = useState("Home"); // Currently selected address
+  const addresses = ["Home", "Work", "123 Main St", "Office"]; // Available addresses
   const [cart, setCart] = useState([]); // Global cart state
 
   // --- Cart Management Functions ---
