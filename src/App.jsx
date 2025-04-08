@@ -321,7 +321,7 @@ function SignupPage({ navigateTo }) {
 // --- Top Bar Component --- (Only shown when logged in)
 function TopBar({ mode, toggleMode, balance, selectedAddress, setSelectedAddress, addresses, navigateTo, cartItemCount }) {
     return (
-        <div className="flex justify-between items-center gap-2 flex-wrap p-4 bg-white shadow-sm sticky top-0 z-20"> {/* Added padding, bg, shadow, sticky */}
+        <div className="flex justify-between items-center gap-2 p-4 bg-white shadow-sm sticky top-0 z-20"> {/* Added padding, bg, shadow, sticky */}
             {/* Address Selector */}
             <div className="relative w-30 sm:w-30">
                 <select
