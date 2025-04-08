@@ -154,7 +154,7 @@ const parsePrice = (priceString) => {
 // --- Top Bar Component ---
 function TopBar({ mode, toggleMode, balance, selectedAddress, setSelectedAddress, addresses, navigateTo, cartItemCount }) {
   return (
-    <div className="flex justify-between items-center gap-2 flex-wrap "> {/* Added flex-wrap for smaller screens */}
+    <div className="flex justify-between items-center gap-2"> {/* Added flex-wrap for smaller screens */}
       {/* Address Selector */}
       <div className="relative w-30 sm:w-27"> {/* Adjusted width */}
         <select
