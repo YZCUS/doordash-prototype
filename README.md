@@ -8,7 +8,21 @@ You can view the live deployment on Vercel: [https://doordash-prototype-allen-ya
 
 ## Features
 
-*   (Add a brief list of the implemented features here, e.g., Browse restaurants, View menus, Add items to cart, Checkout process simulation)
+*   **User Authentication:** Login and Signup functionality.
+*   **Restaurant/Store Browsing:**
+    *   View various categories (food, convenience, grocery, etc.).
+    *   See promotional ads and recommendations (Popular, Guess You Like).
+    *   Switch between Delivery and Pickup modes.
+*   **Store Details & Menu:** View individual store pages and add items to the cart.
+*   **Shopping Cart:** Add, update quantity, remove items, and clear the cart.
+*   **Order Simulation:** Includes order summary and receipt pages.
+*   **User Profile & Activity:**
+    *   View order history.
+    *   Manage favorite stores.
+    *   Access settings and logout.
+    *   View recommendations.
+*   **Address Selection:** Choose a delivery address (mocked).
+*   **Basic Navigation:** Top and bottom navigation bars for easy access to different sections.
 
 ## Technologies Used
 
