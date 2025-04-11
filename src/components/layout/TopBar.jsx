@@ -1,7 +1,7 @@
 import React from 'react';
 import { MapPin, ShoppingCart, DollarSign, ChevronRight } from 'lucide-react';
-import { Button } from '../ui/Button';
-import { Switch } from '../ui/Switch';
+import { Button } from '@/components/ui/Button';
+import { Switch } from '@/components/ui/Switch';
 
 // Top Bar Component
 export default function TopBar({ mode, toggleMode, balance, selectedAddress, setSelectedAddress, addresses, navigateTo, cartItemCount }) {
