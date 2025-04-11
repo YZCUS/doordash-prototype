@@ -1,8 +1,8 @@
 import React from 'react';
 import { MapPin, ShoppingCart, DollarSign, ChevronRight } from 'lucide-react';
-// Try path relative to src directory
-import { Button } from 'components/ui/Button.jsx';
-import { Switch } from 'components/ui/Switch.jsx';
+// Revert back to alias path, assuming Vercel root directory setting is fixed
+import { Button } from '@/components/ui/Button.jsx';
+import { Switch } from '@/components/ui/Switch.jsx';
 
 // Top Bar Component
 export default function TopBar({ mode, toggleMode, balance, selectedAddress, setSelectedAddress, addresses, navigateTo, cartItemCount }) {
