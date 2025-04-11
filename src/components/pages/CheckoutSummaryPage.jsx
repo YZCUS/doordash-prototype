@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { Card, CardContent } from '../ui/Card';
-import { Button } from '../ui/Button';
+import { Card, CardContent } from '@/components/ui/Card.jsx';
+import { Button } from '@/components/ui/Button.jsx';
 import { CheckCircle, MapPin } from 'lucide-react';
 
 // Checkout Summary Page Component

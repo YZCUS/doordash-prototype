@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Card, CardContent } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { Input } from '../ui/Input';
-import { Label } from '../ui/Label';
+import { Card, CardContent } from '@/components/ui/Card.jsx';
+import { Button } from '@/components/ui/Button.jsx';
+import { Input } from '@/components/ui/Input.jsx';
+import { Label } from '@/components/ui/Label.jsx';
 import { LogIn } from 'lucide-react';
 
 // LoginPage Component
