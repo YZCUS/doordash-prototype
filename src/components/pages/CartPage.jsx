@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Card, CardContent } from '@/components/ui/Card.jsx';
-import { Button } from '@/components/ui/Button.jsx';
-import { Input } from '@/components/ui/Input.jsx';
-import { Label } from '@/components/ui/Label.jsx';
-import { Switch } from '@/components/ui/Switch.jsx';
+import { Card, CardContent } from '../ui/Card.jsx';
+import { Button } from '../ui/Button.jsx';
+import { Input } from '../ui/Input.jsx';
+import { Label } from '../ui/Label.jsx';
+import { Switch } from '../ui/Switch.jsx';
 import { MinusCircle, PlusCircle, Trash2 } from 'lucide-react';
 
 // Cart Page Component

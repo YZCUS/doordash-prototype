@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/Card.jsx';
-import { Button } from '@/components/ui/Button.jsx';
+import { Card, CardContent } from '../ui/Card.jsx';
+import { Button } from '../ui/Button.jsx';
 import { Printer, FileText, ChevronLeft } from 'lucide-react';
 
 // Receipt Page Component
