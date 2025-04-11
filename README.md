@@ -1,12 +1,59 @@
-# React + Vite
+# DoorDash Prototype (HCI Project)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a prototype developed for a Human Computer Interaction (HCI) course, demonstrating the basic functionalities of a food delivery application like DoorDash.
 
-Currently, two official plugins are available:
+## Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+You can view the live deployment on Vercel: [https://doordash-prototype-allen-yaos-projects.vercel.app](https://doordash-prototype-allen-yaos-projects.vercel.app)
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+*   (Add a brief list of the implemented features here, e.g., Browse restaurants, View menus, Add items to cart, Checkout process simulation)
+
+## Technologies Used
+
+*   React
+*   Vite
+
+### Key Dependencies
+
+*   `@radix-ui/react-slot`: For component primitives.
+*   `tailwindcss`: For utility-first CSS styling.
+*   `lucide-react`: For icons.
+*   `clsx`, `tailwind-merge`: For conditional class names.
+*   `class-variance-authority`: For managing component variants.
+
+## Getting Started
+
+Follow these instructions to get a local copy up and running.
+
+### Prerequisites
+
+*   Node.js and npm (or yarn) installed on your machine.
+
+### Installation
+
+1.  Clone the repository:
+    ```bash
+    git clone https://github.com/YZCUS/doordash-prototype.git
+    ```
+2.  Navigate to the project directory:
+    ```bash
+    cd my-doordash-app
+    ```
+3.  Install NPM packages:
+    ```bash
+    npm install
+    # or
+    # yarn install
+    ```
+
+### Running the Development Server
+
+```bash
+npm run dev
+# or
+# yarn dev
+```
+
+This will start the Vite development server, typically accessible at `http://localhost:5173`. Open this URL in your browser to see the application.
