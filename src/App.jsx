@@ -51,30 +51,38 @@ export default function DoorDashPrototype() {
     // --- Cart Management Functions ---
     // Adds an item to the cart, handling existing items and different stores
     const addToCart = (item, quantity) => {
+        console.log(`[addToCart] Called with item ID: ${item.id}, quantity: ${quantity}`);
         setCart(prevCart => {
+            console.log(`  [addToCart] Inside updater. Prev cart:`, JSON.stringify(prevCart));
             if (!item.storeName) {
-                console.error("Attempted to add item without storeName:", item);
+                console.error("  [addToCart] Attempted to add item without storeName:", item);
                 return prevCart; // Don't add item if storeName is missing
             }
             const existingItemIndex = prevCart.findIndex(cartItem => cartItem.id === item.id);
 
             if (existingItemIndex > -1) {
-                // Item already exists, update quantity
+                console.log(`  [addToCart] Item found at index ${existingItemIndex}. Current quantity: ${prevCart[existingItemIndex].quantity}. Adding: ${quantity}`);
+                // Item already exists, update quantity (Revert to additive logic)
                 const updatedCart = [...prevCart];
                 updatedCart[existingItemIndex].quantity += quantity;
+                console.log(`  [addToCart] New quantity: ${updatedCart[existingItemIndex].quantity}. Updated cart:`, JSON.stringify(updatedCart));
                 return updatedCart;
             } else {
+                console.log(`  [addToCart] Item not found. Adding new item.`);
                 // New item, check if it's from the same store
                 if (prevCart.length > 0 && prevCart[0].storeName !== item.storeName) {
                     // Item from a different store, replace the current cart
-                    console.warn("Added item from different store. Replacing cart.");
+                    console.warn("  [addToCart] Added item from different store. Replacing cart.");
                     // Ensure priceValue is parsed before adding
                     const itemToAdd = { ...item, priceValue: parsePrice(item.price), quantity };
+                    console.log(`  [addToCart] New cart (replaced):`, JSON.stringify([itemToAdd]));
                     return [itemToAdd];
                 }
                 // Cart is empty or item is from the same store, add the new item
                 const itemToAdd = { ...item, priceValue: parsePrice(item.price), quantity };
-                return [...prevCart, itemToAdd];
+                const newCart = [...prevCart, itemToAdd];
+                console.log(`  [addToCart] New cart (appended):`, JSON.stringify(newCart));
+                return newCart;
             }
         });
     };
@@ -180,6 +188,7 @@ export default function DoorDashPrototype() {
                     currentPage={currentPage}
                     navigateTo={navigateTo}
                     // Pass all necessary props down to the navigator
+                    mode={mode}
                     orderCategories={orderCategories}
                     cuisineCategories={cuisineCategories}
                     promotionalAds={promotionalAds}

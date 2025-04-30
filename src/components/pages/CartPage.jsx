@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent } from '../ui/Card.jsx';
 import { Button } from '../ui/Button.jsx';
 import { Input } from '../ui/Input.jsx';
@@ -7,34 +7,90 @@ import { Switch } from '../ui/Switch.jsx';
 import { MinusCircle, PlusCircle, Trash2 } from 'lucide-react';
 
 // Cart Page Component
-export default function CartPage({ navigateTo, cart, updateCartQuantity, removeFromCart, clearCart, balance }) {
-    const [useBalance, setUseBalance] = useState(false);
+export default function CartPage({ navigateTo, cart, updateCartQuantity, removeFromCart, clearCart, balance, mode }) {
+    // const [useBalance, setUseBalance] = useState(false);
+    const [balanceInput, setBalanceInput] = useState(''); // State to hold the input value as string
 
-    // Calculate cart totals
-    const subtotal = cart.reduce((sum, item) => sum + item.priceValue * item.quantity, 0);
-    const deliveryFee = cart.length > 0 ? 2.50 : 0; // Example fixed delivery fee
-    const taxes = subtotal * 0.08; // Example 8% tax rate
-    const orderTotal = subtotal + deliveryFee + taxes;
-    const balanceToApply = useBalance ? Math.min(balance, orderTotal) : 0;
-    const finalTotal = orderTotal - balanceToApply;
+    // Calculate cart totals (memoized for performance)
+    const { subtotal, deliveryFee, taxes, orderTotal } = useMemo(() => {
+        const subtotalCalc = cart.reduce((sum, item) => sum + item.priceValue * item.quantity, 0);
+        const deliveryFeeCalc = cart.length > 0 && mode === 'delivery' ? 2.50 : 0;
+        const taxesCalc = subtotalCalc * 0.08;
+        const orderTotalCalc = subtotalCalc + deliveryFeeCalc + taxesCalc;
+        return { subtotal: subtotalCalc, deliveryFee: deliveryFeeCalc, taxes: taxesCalc, orderTotal: orderTotalCalc };
+    }, [cart, mode]);
+
+    // Calculate the actual balance to apply based on input and constraints
+    const balanceApplied = useMemo(() => {
+        const inputAmount = parseFloat(balanceInput) || 0;
+        const maxApplicable = Math.min(balance, orderTotal); // Cannot apply more than available balance or order total
+        return Math.max(0, Math.min(inputAmount, maxApplicable)); // Ensure applied balance is non-negative and within limits
+    }, [balanceInput, balance, orderTotal]);
+
+    const finalTotal = useMemo(() => orderTotal - balanceApplied, [orderTotal, balanceApplied]);
+
+    // Effect to adjust balanceInput if it exceeds the new maximum applicable balance
+    useEffect(() => {
+        const currentInputAmount = parseFloat(balanceInput);
+        // Only proceed if balanceInput is a valid number greater than 0
+        if (!isNaN(currentInputAmount) && currentInputAmount > 0) {
+            const maxApplicable = Math.min(balance, orderTotal);
+            if (currentInputAmount > maxApplicable) {
+                console.log(`[CartPage Effect] Adjusting balance input from ${currentInputAmount} down to ${maxApplicable.toFixed(2)} due to orderTotal/balance change.`);
+                setBalanceInput(maxApplicable.toFixed(2));
+            }
+        }
+        // Add balanceInput to dependencies to re-run check if user manually changes input
+        // Add orderTotal and balance as they determine the maxApplicable limit
+    }, [orderTotal, balance, balanceInput]);
 
     // Determine the store name (assuming all items are from the same store)
     const storeName = cart.length > 0 && cart[0].storeName ? cart[0].storeName : "Your";
 
+    // Handler for balance input change
+    const handleBalanceInputChange = (e) => {
+        const value = e.target.value;
+        // Basic validation: allow empty, or numbers potentially with a decimal point and up to 2 decimal places
+        if (value === '' || /^\d*\.?\d{0,2}$/.test(value)) {
+            // Further validation could be added here to prevent exceeding limits *during* input
+            // For now, we rely on the balanceApplied calculation
+            // setBalanceInput(value); // Moved setBalanceInput call after potential adjustment
+
+            const inputAmount = parseFloat(value);
+            const maxApplicable = Math.min(balance, orderTotal);
+
+            // Check if the input amount exceeds the maximum applicable balance
+            if (!isNaN(inputAmount) && inputAmount > maxApplicable) {
+                // If it exceeds, set the input to the maximum applicable value
+                setBalanceInput(maxApplicable.toFixed(2));
+            } else {
+                // Otherwise, set the input to the user's entered value
+                setBalanceInput(value);
+            }
+        }
+    };
+
+    // Handler to apply the maximum possible balance
+    const applyMaxBalance = () => {
+        const maxApplicable = Math.min(balance, orderTotal);
+        setBalanceInput(maxApplicable.toFixed(2)); // Set input to the max possible value, formatted
+    };
+
     const handlePlaceOrder = () => {
-        if (cart.length === 0) return; // Prevent placing order with empty cart
+        if (cart.length === 0) return;
 
         // Prepare order details object
         const orderDetails = {
-            items: [...cart], // Create a copy of the cart items
+            items: [...cart],
             subtotal,
             deliveryFee,
             taxes,
-            balanceApplied: balanceToApply,
+            balanceApplied,
             finalTotal,
             storeName,
-            orderId: `DD${Date.now()}`, // Generate a simple mock order ID
+            orderId: `DD${Date.now()}`,
             orderDate: new Date().toLocaleDateString(),
+            mode: mode, // Add the current mode to the order details
             // Add other necessary details like payment method, address, etc.
         };
 
@@ -93,7 +149,10 @@ export default function CartPage({ navigateTo, cart, updateCartQuantity, removeF
                     {/* Price Breakdown */}
                     <div className="space-y-1 pt-4 border-t">
                         <div className="flex justify-between text-sm"><span>Subtotal</span><span>${subtotal.toFixed(2)}</span></div>
-                        <div className="flex justify-between text-sm"><span>Delivery Fee</span><span>${deliveryFee.toFixed(2)}</span></div>
+                        {/* Only show delivery fee if it's greater than 0 */}
+                        {deliveryFee > 0 && (
+                            <div className="flex justify-between text-sm"><span>Delivery Fee</span><span>${deliveryFee.toFixed(2)}</span></div>
+                        )}
                         <div className="flex justify-between text-sm text-gray-600"><span>Taxes</span><span>${taxes.toFixed(2)}</span></div>
                         <div className="flex justify-between text-sm font-medium mt-1 border-t pt-1"><span>Order Total</span><span>${orderTotal.toFixed(2)}</span></div>
                     </div>
@@ -101,17 +160,30 @@ export default function CartPage({ navigateTo, cart, updateCartQuantity, removeF
                     {/* Use Balance Section (only if balance > 0) */}
                     {balance > 0 && (
                         <div className="pt-4 border-t">
-                            <div className="flex items-center justify-between p-3 border rounded-lg bg-green-50">
-                                <Label htmlFor="useBalance" className="text-sm font-medium text-green-800 flex-grow mr-2">
-                                    Use available balance (${balance.toFixed(2)})?
-                                </Label>
-                                <Switch id="useBalance" checked={useBalance} onCheckedChange={setUseBalance} />
+                            {/* Replaced Switch with Input field */}
+                            <Label htmlFor="balanceInput" className="text-sm font-medium text-gray-700">
+                                Apply Balance (Available: ${balance.toFixed(2)})
+                            </Label>
+                            <div className="flex items-center gap-2 mt-1">
+                                <Input
+                                    id="balanceInput"
+                                    type="number"
+                                    placeholder={`Max $${Math.min(balance, orderTotal).toFixed(2)}`}
+                                    value={balanceInput}
+                                    onChange={handleBalanceInputChange}
+                                    className="w-full flex-grow"
+                                    max={Math.min(balance, orderTotal).toFixed(2)} // HTML5 validation attribute
+                                    min="0"
+                                    step="0.01"
+                                    aria-label={`Apply balance, available ${balance.toFixed(2)}`}
+                                />
+                                <Button variant="outline" size="sm" onClick={applyMaxBalance} className="whitespace-nowrap flex-shrink-0">Apply Max</Button>
                             </div>
-                            {useBalance && (
-                                <p className="text-xs text-green-600 mt-1 text-right">
-                                    -${balanceToApply.toFixed(2)} applied
-                                </p>
-                            )}
+                            {/* Display the amount actually being applied */}
+                            <p className="text-xs text-green-600 mt-1 text-right">
+                                Applying: ${balanceApplied.toFixed(2)}
+                            </p>
+                            {/* Optional: Add validation error messages here */}
                         </div>
                     )}
 

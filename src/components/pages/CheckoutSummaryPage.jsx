@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Card, CardContent } from '../ui/Card.jsx';
 import { Button } from '../ui/Button.jsx';
-import { CheckCircle, MapPin } from 'lucide-react';
+import { CheckCircle, MapPin, Store } from 'lucide-react';
 
 // Checkout Summary Page Component
 export default function CheckoutSummaryPage({ navigateTo, orderDetails }) {
@@ -17,8 +17,12 @@ export default function CheckoutSummaryPage({ navigateTo, orderDetails }) {
         return <div className="text-center py-10 text-gray-500">Loading summary...</div>;
     }
 
-    const { items, subtotal, deliveryFee, taxes, balanceApplied, finalTotal, storeName, orderId, orderDate } = orderDetails;
-    const estimatedDeliveryTime = "30-45 minutes"; // Mock data
+    // Extract mode from orderDetails
+    const { items, subtotal, deliveryFee, taxes, balanceApplied, finalTotal, storeName, orderId, orderDate, mode } = orderDetails;
+    // const estimatedDeliveryTime = "30-45 minutes"; // Mock data
+    // Make estimated time conditional based on mode from orderDetails
+    const estimatedTime = mode === 'pickup' ? "15-25 minutes" : "30-45 minutes";
+    const timeLabel = mode === 'pickup' ? "Estimated Pickup" : "Estimated Delivery";
 
     return (
         <div className="space-y-6">
@@ -28,7 +32,9 @@ export default function CheckoutSummaryPage({ navigateTo, orderDetails }) {
                 <h2 className="text-2xl font-bold">Order Placed!</h2>
                 <p className="text-gray-600">Thank you for your order from <span className="font-medium">{storeName}</span>.</p>
                 <p className="text-sm text-gray-500">Order ID: {orderId}</p>
-                <p className="text-sm text-gray-500">Estimated Delivery: {estimatedDeliveryTime}</p>
+                {/* <p className="text-sm text-gray-500">Estimated Delivery: {estimatedDeliveryTime}</p> */}
+                {/* Display conditional time */}
+                <p className="text-sm text-gray-500">{timeLabel}: {estimatedTime}</p>
             </div>
 
             {/* Order Summary Card */}
@@ -43,7 +49,10 @@ export default function CheckoutSummaryPage({ navigateTo, orderDetails }) {
                         </div>
                     ))}
                     <div className="flex justify-between text-sm pt-2"><span>Subtotal</span><span>${subtotal.toFixed(2)}</span></div>
-                    <div className="flex justify-between text-sm"><span>Delivery Fee</span><span>${deliveryFee.toFixed(2)}</span></div>
+                    {/* Conditionally render Delivery Fee */}
+                    {mode === 'delivery' && deliveryFee > 0 && (
+                        <div className="flex justify-between text-sm"><span>Delivery Fee</span><span>${deliveryFee.toFixed(2)}</span></div>
+                    )}
                     <div className="flex justify-between text-sm text-gray-600"><span>Taxes</span><span>${taxes.toFixed(2)}</span></div>
                     {balanceApplied > 0 && (
                         <div className="flex justify-between text-sm text-green-600"><span>Balance Applied</span><span>-${balanceApplied.toFixed(2)}</span></div>
@@ -52,14 +61,28 @@ export default function CheckoutSummaryPage({ navigateTo, orderDetails }) {
                 </CardContent>
             </Card>
 
-            {/* Delivery Address Card (Mock Data) */}
-            <Card className="p-0 rounded-xl overflow-hidden shadow-sm">
-                <CardContent className="p-4 space-y-1">
-                    <h3 className="text-base font-semibold flex items-center gap-2"><MapPin className="w-5 h-5 text-red-600" /> Delivery Address</h3>
-                    <p className="text-sm text-gray-700">John Doe</p>
-                    <p className="text-sm text-gray-700">123 Main St, Anytown, USA 12345</p>
-                </CardContent>
-            </Card>
+            {/* Delivery Address Card (Mock Data) - Conditionally rendered */}
+            {mode === 'delivery' && (
+                <Card className="p-0 rounded-xl overflow-hidden shadow-sm">
+                    <CardContent className="p-4 space-y-1">
+                        <h3 className="text-base font-semibold flex items-center gap-2"><MapPin className="w-5 h-5 text-red-600" /> Delivery Address</h3>
+                        <p className="text-sm text-gray-700">John Doe</p>
+                        <p className="text-sm text-gray-700">123 Main St, Anytown, USA 12345</p>
+                    </CardContent>
+                </Card>
+            )}
+
+            {/* Pickup Location Card - Conditionally rendered */}
+            {mode === 'pickup' && (
+                <Card className="p-0 rounded-xl overflow-hidden shadow-sm">
+                    <CardContent className="p-4 space-y-1">
+                        <h3 className="text-base font-semibold flex items-center gap-2"><Store className="w-5 h-5 text-blue-600" /> Pickup Location</h3>
+                        <p className="text-sm text-gray-700 font-medium">{storeName}</p>
+                        {/* Add mock store address if available/needed */}
+                        <p className="text-sm text-gray-500">Mock Store Address, Anytown</p>
+                    </CardContent>
+                </Card>
+            )}
 
             {/* Action Buttons */}
             <div className="flex gap-2">

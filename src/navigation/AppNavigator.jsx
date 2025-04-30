@@ -13,6 +13,7 @@ import StorePage from '../components/pages/StorePage';
 import CheckoutSummaryPage from '../components/pages/CheckoutSummaryPage';
 import ReceiptPage from '../components/pages/ReceiptPage';
 import SimplePage from '../components/common/SimplePage';
+import PopularNearbyPage from '../components/pages/PopularNearbyPage';
 
 // Navigation Component
 // This component renders the correct page based on the currentPage state
@@ -20,6 +21,7 @@ export default function AppNavigator({
     currentPage,
     navigateTo,
     // Props needed by pages
+    mode,
     orderCategories,
     cuisineCategories,
     promotionalAds,
@@ -63,6 +65,7 @@ export default function AppNavigator({
                 removeFromCart={removeFromCart}
                 clearCart={clearCart}
                 balance={balance}
+                mode={mode}
             />;
             case 'store':
                 // Fallback to login if no store data is available when navigating to store page
@@ -73,7 +76,7 @@ export default function AppNavigator({
                 /> : <LoginPage navigateTo={navigateTo} />;
             case 'summary': return <CheckoutSummaryPage navigateTo={navigateTo} orderDetails={currentOrderDetails} />;
             case 'receipt': return <ReceiptPage navigateTo={navigateTo} orderDetails={currentOrderDetails} />;
-            case 'popular': return <SimplePage title="Popular Nearby" navigateTo={navigateTo} />;
+            case 'popular': return <PopularNearbyPage popularStores={popularStores} navigateTo={navigateTo} />;
             default:
                 console.warn(`AppNavigator: Unknown page "${currentPage}", defaulting to login.`);
                 return <LoginPage navigateTo={navigateTo} />; // Default to login for unknown pages
